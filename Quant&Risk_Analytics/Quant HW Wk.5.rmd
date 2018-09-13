@@ -1,0 +1,50 @@
+---
+title: "HW Quant Wk.5"
+author: "Teepawat A."
+date: "7 September 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(quantmod)
+library(timeSeries)
+```
+
+## Load stock data named "Alibaba Group"(BABA)
+Plot close price of BABA for investigation
+```{r}
+getSymbols('BABA')
+return = na.omit(diff(BABA))
+plot(BABA$BABA.Close)
+```
+
+## Create return of Alibaba group's stock price
+```{r}
+return = na.omit(diff(BABA$BABA.Close))
+plot(return)
+```
+## Next, we will prove 3 facts of return
+## 1. distribution of returns is not normal
+
+```{r}
+hist(return, breaks = "Scott", probability = T)
+curve(dnorm(x,mean=mean(return),sd=sd(return)),col='red',add=T,main="")
+```
+For Alibaba Group's stock, the distribution seem like "Normal" but a little skew to the left.
+
+## 2.There is almost no correlations between returns for different days.   
+```{r}
+acf(return)
+```
+From the graph above, the second rule is quite true since autocorrelations are quite small.
+
+# 3. There is positive dependence(autocorrelations) between absolute returns on nearby days, and likewise for squared returns.
+
+```{r}
+par(mfrow = c(2,1))
+acf(abs(return))
+acf(return^2)
+```
+It is confirmed that there is positive dependency  between absolute return in nearby days.
